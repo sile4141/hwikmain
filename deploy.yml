@@ -1,0 +1,68 @@
+#############################################################################################################
+#                                                설명서                                                
+# deploy-info : 배포와 관련된 정보들
+#   deploy-yn : 배포 진행여부, 형상관리를 위한 git push 만을 원하면 N, 배포까지 연동한 push 라면 Y
+#   deploy-type : 배포 방식 지정
+#                 { r : rolling update , bg : blue green , ab : ab testing , c : canary }
+#                 이외의 값을 입력할 경우 rolling update 로 진행
+#   deploy-target-service : 배포가 진행될 서비스 선택
+#                           { 휙파인패스 : pine , 휙고 : hwikgo , core : hwik , 강릉패스 : gnpass}
+#                           ',' (comma로 구분하여 여러개 입력) ex) deploy-target-service: pine, hwikgo
+#   application-name : Application 이름
+#   service-port : 배포하는 application 이 사용하는 포트 (java: 8080, go: 1323, react: 8080)
+#   api-prefix : 배포하는 application 의 api prefix (트래픽 Routing에 사용. ex) /v2/helloworld)
+#   abtesting-header-value : ab testing으로 배포할 경우 사용할 트래픽 구분 header
+#
+# resource-spec : 배포 리소스 스팩
+#   env (dev, staging, prod) : 각 환경별 적절한 resource 할당
+#     replicas : 배포될 최소(기본) pod 갯수 (2개 이상일 경우, F각 팀장과 협의)
+#     server
+#       java-opts : java application만 기록 ex) java-opts: -Xms256m -Xmx512m
+#       pod-resources : pod 리소스 지정
+#         requests : 최소 할당 요구치 (이 리소스 할당은 보장)
+#           memory : memory 할당 ex) memory: "50Mi"
+#           cpu : cpu 할당 ex) "20m"
+#         limits : 최대 할당 요구치 (이 리소스 만큼은 Node에서 추가 할당 가능)
+#           memory : memory 할당 ex) memory: "80Mi"
+#           cpu : cpu 할당 ex) "40m"
+#############################################################################################################
+deploy-info:
+  deploy-yn: Y
+  deploy-type: r
+  deploy-target-service: hwik
+  application-name: sample
+  application-version: 1.1.1
+  service-port: 1323
+  api-prefix: /v2/sample
+  abtesting-header-value: hwik
+resource-spec:
+  dev:
+    replicas: 1
+    server:
+      pod-resources:
+        requests:
+          memory: "70Mi"
+          cpu: "20m"
+        limits:
+          memory: "100Mi"
+          cpu: "40m"
+  staging:
+    replicas: 1
+    server:
+      pod-resources:
+        requests:
+          memory: "70Mi"
+          cpu: "20m"
+        limits:
+          memory: "100Mi"
+          cpu: "40m"
+  prod:
+    replicas: 1
+    server:
+      pod-resources:
+        requests:
+          memory: "90Mi"
+          cpu: "60m"
+        limits:
+          memory: "120Mi"
+          cpu: "80m"
