@@ -3,11 +3,12 @@ package main
 import (
 
 	// elastic "go.elastic.co/apm"
+	//일단 테스트 주석임
+	"os"
 
 	app "github.com/hwikpass/hwik-go"
 	"github.com/hwikpass/hwik-sample/model"
 	router "github.com/hwikpass/hwik-sample/router"
-	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 )
